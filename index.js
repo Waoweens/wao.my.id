@@ -1,0 +1,1 @@
+console.log('%cHello bebek papa beben', 'font-size: 4em; font-weight: bold; color: orange;');
