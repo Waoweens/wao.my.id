@@ -1,39 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>wao.my.id - Under Construction</title>
+	<title>wao.my.id</title>
 
 	<meta property="og:title" content="wao.my.id">
-	<meta property="og:description" content="Under Construction">
+	<meta property="og:description" content="hi :3">
+
+	<style>
+		* {
+			font-family: 'IBM Plex Mono', monospace;
+			color: white;
+		}
+
+		body {
+			background-color: black;
+			padding: 0.5rem;
+		}
+
+		.main-img {
+			max-width: 400px;
+		}
+
+		.flex {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+
+		.border {
+			border: 1px solid white;
+		}
+
+		.marquee {
+			flex: 1;
+			overflow: hidden;
+			white-space: nowrap;
+			box-sizing: border-box;
+		}
+
+		.marquee .marquee-animation {
+			display: inline-block;
+			animation: marquee 15s linear infinite;
+		}
+
+		@keyframes marquee {
+			0% {
+				transform: translateX(100%);
+			}
+
+			100% {
+				transform: translateX(-100%);
+			}
+		}
+
+		.legacy-marquee {
+			white-space: nowrap;
+			overflow: hidden;
+		}
+
+		.main-container {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.main-container section {
+			flex: 1;
+		}
+
+		.main-container .float-right {
+			flex: 0;
+		}
+
+		.opaque {
+			opacity: 0.5;
+		}
+	</style>
 </head>
-<style>
-	* {
-		font-family: 'IBM Plex Mono', monospace;
-		color: white;
-	}
 
-	body {
-		background-color: black;
-	}
-
-	.main-img {
-		max-width: 400px;
-	}
-</style>
 <body>
-	<h1>Under Construction</h1>
+	<header>
+		<div class="flex border">
+			<span>what's happening:</span>
+			<!-- <div class="marquee">
+				<span class="marquee-animation">
+					<a href="https://www.youtube.com/watch?v=Ciia3eBFnb8">Life is Strange: Double Exposure</a>
+					just got announced and i am very excited
+				</span>
+			</div> -->
+			<!--TODO: replace <marquee> with CSS equivalent-->
+			<marquee class="legacy-marquee">
+				&nbsp;—&nbsp;
+				this is a test of the news system
+				&nbsp;—&nbsp;
+				<a href="https://www.youtube.com/watch?v=Ciia3eBFnb8">Life is Strange: Double Exposure</a>
+				just got announced and i am very excited
+				&nbsp;—&nbsp;
+				i'm pretty sure i just failed my chemistry test
+				&nbsp;—&nbsp;
+				i want to join your webrings
+				&nbsp;—&nbsp;
+			</marquee>
+		</div>
+	</header>
 
-	<img class="main-img" src="/assets/PXL_20240609_143757494.MP.OPTIMIZED.jpg" alt="BLÅHAJ 100 cm">
+	<main>
+		<div class="">
+			<section>
+				<h1>wao.my.id</h1>
+				<p>Under Construction!</p>
 
-	<p>find me somewhere else</p>
-	<ul>
-		<li><a href="https://github.com/Waoweens">GitHub</a></li>
-		<li><a href="https://twitter.com/Waoweens">Twitter</a></li>
-		<li><a href="https://bsky.app/profile/wao.my.id">Bluesky</a></li>
-		<li><a href="https://steamcommunity.com/id/Waoweens/">Steam</a></li>
-		<li>Discord: @waoweens — ID: 551305036416811029</li>
-	</ul>
+				<figure>
+					<img alt="drawn representation of me" title=":3" src="assets/waomoni.png">
+					<figcaption>
+						drawn by
+						<details>
+							<summary style="cursor: pointer"><u>sitas</u></summary>
+							<ul>
+								<li><a href="https://twitter.com/notsuspiciousn2">Twitter</a></li>
+								<li><a href="https://bsky.app/profile/sitas.meowcorp.net">Bluesky</a></li>
+							</ul>
+						</details>
+					</figcaption>
+				</figure>
+
+				<p>hi, i'm Waoweens. <span class="opaque"><abbr title="i also accept they/them">(he/him)</abbr></span> i make things and they are not very good</p>
+
+				<p>find me somewhere else:</p>
+				<ul>
+					<li><a href="https://github.com/Waoweens">GitHub</a></li>
+					<li><a href="https://twitter.com/Waoweens">Twitter</a></li>
+					<li><a href="https://bsky.app/wao.my.id">Bluesky</a></li>
+					<li><a href="https://steamcommunity.com/id/Waoweens/">Steam</a></li>
+					<li>Discord: <a href="https://discord.com/users/551305036416811029">@waoweens</a> — ID:
+						551305036416811029
+					</li>
+					<li>Mail: i'm still setting up <abbr title="Simple Mail Transfer Protocol">SMTP</abbr></li>
+					<!--<li>Mail: <a href="mailto:me@wao.my.id">me@wao.my.id</a> — mail from me may end up in spam or promotions!</li>-->
+				</ul>
+
+				<img class="main-img" alt="BLÅHAJ 100 cm" title=":3"
+					src="/assets/PXL_20240609_143757494.MP.OPTIMIZED.jpg">
+
+				<br>
+			</section>
+			<!-- <section class="float-right">
+				hi
+			</section> -->
+		</div>
+	</main>
+
+	<footer>
+		<a rel="noreferrer" href="https://wao.my.id" target="_blank">
+			<img alt="88x31 banner for this website" title="me :3" src="assets/wao-88x31.png">
+		</a>
+		<br>
+		<a href="https://github.com/Waoweens/waoweens.github.io">Source code</a>
+		<p>this site is best viewed with <a href="https://www.ibm.com/plex/">IBM Plex®</a> Mono (fallback to system monospace font)</p>
+	</footer>
+
 </body>
 </html>
