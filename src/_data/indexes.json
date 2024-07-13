@@ -1,0 +1,8 @@
+{
+	"stylesheets": [
+		"base.css"
+	],
+	"scripts": [
+		"oneko.js"
+	]
+}

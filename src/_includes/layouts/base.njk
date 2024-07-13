@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{ title if title else main.name }}</title>
+
+	{% for style in indexes.stylesheets %}
+		<link type="text/css" rel="stylesheet" href="/styles/{{ style }}">
+	{% endfor %}
+
+	{% for script in indexes.scripts %}
+		<script type="text/javascript" src="/scripts/{{ script }}" defer></script>
+	{% endfor %}
+</head>
+<body>
+	<main>
+		{{ content | safe }}
+	</main>
+</body>
+</html>
