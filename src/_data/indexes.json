@@ -1,6 +1,6 @@
 {
 	"stylesheets": [
-		"base.css"
+		"index.css"
 	],
 	"scripts": [
 		"oneko.js"

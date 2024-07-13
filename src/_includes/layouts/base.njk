@@ -3,15 +3,41 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{ title if title else main.name }}</title>
-
+	
 	{% for style in indexes.stylesheets %}
-		<link type="text/css" rel="stylesheet" href="/styles/{{ style }}">
+	<link type="text/css" rel="stylesheet" href="/styles/{{ style }}">
 	{% endfor %}
-
+	
 	{% for script in indexes.scripts %}
-		<script type="text/javascript" src="/scripts/{{ script }}" defer></script>
+	<script type="text/javascript" src="/scripts/{{ script }}" defer></script>
 	{% endfor %}
+	
+	<title>{{ title if title else site.name }}</title>
+	<meta name="application-name" content="{{ site.name }}" />
+	<meta name="generator" content="{{ eleventy.generator }}" />
+	<meta name="description" content="{{ description if description else site.description }}" />
+	
+	<!-- Open Graph -->
+	<meta property="og:site_name" content="{{ site.name }}"  />
+	<meta property="og:type" content="{{ 'article' if '/post' in page.url else 'website' }}" />
+	<meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+	<meta property="og:title" content="{{ title if title else site.name }}" />
+	<meta property="og:description" content="{{ description if description else site.description }}" />
+	{# <meta property="og:image" content={$page.data.meta?.ogImage ?? ''} /> #}
+
+	<!-- og:type article -->
+	<meta name="article:author" content="{{ site.author }}" />
+	{# <meta name="article:published_time" content={$page.data.meta?.articlePublishedTime ?? ''} /> #}
+
+	<!-- Twitter Card -->
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="{{ site.twitter }}" />
+	<meta name="twitter:creator" content="{{ site.twitter }}" />
+	{# <meta name="twitter:image" content={$page.data.meta?.twitterImage ?? ''} /> #}
+	{#each $page.data.meta?.twitterValues ?? [] as { label, value }, i}
+		<meta name="twitter:label{i + 1}" content={label} />
+		<meta name="twitter:value{i + 1}" content={value} />
+	{/each#}
 </head>
 <body>
 	<main>
