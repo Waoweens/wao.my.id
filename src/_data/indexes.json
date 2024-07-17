@@ -1,8 +1,10 @@
 {
 	"stylesheets": [
-		"index.css"
+		"index.css",
+		"nowplaying.css"
 	],
 	"scripts": [
-		"oneko.js"
+		"oneko.js",
+		"nowplaying.js"
 	]
 }
