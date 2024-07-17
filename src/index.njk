@@ -1,6 +1,5 @@
----
-layout: layouts/base.njk
----
+{% extends 'layouts/base.njk' %}
+{%block main %}
 <header>
 	<div class="flex border">
 		<span>what's happening:</span>
@@ -72,3 +71,4 @@ layout: layouts/base.njk
 	<p>this site is best viewed with <a href="https://www.ibm.com/plex/">IBM Plex®</a> Mono (fallback to system
 		monospace font)</p>
 </footer>
+{% endblock %}
