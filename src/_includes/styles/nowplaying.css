@@ -1,0 +1,15 @@
+#nowPlaying {
+	margin-bottom: 10rem;
+}
+
+#songContainer{
+	display: flex;
+	padding: 1rem;
+	border: 1px solid white;
+	max-height: 10rem;
+	align-items: center;
+}
+
+#songArtwork {
+	height: 100%;
+}
