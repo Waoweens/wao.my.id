@@ -1,10 +1,10 @@
 {
-	"stylesheets": [
-		"index.css",
-		"nowplaying.css"
-	],
-	"scripts": [
-		"oneko.js",
-		"nowplaying.js"
-	]
+	"stylesheets": {
+		"tag": "<link type=\"text/css\" rel=\"stylesheet\" href=\"{uri}\" >",
+		"list": ["index.css", "nowplaying.css"]
+	},
+	"scripts": {
+		"tag": "<script type=\"text/javascript\" src=\"{uri}\" defer>",
+		"list": ["oneko.js", "nowplaying.js"]
+	}
 }
