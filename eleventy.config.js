@@ -9,7 +9,7 @@ module.exports = function (eleventyConfig) {
 		for (const item of indexes[type]['list']) {
 			const uri = item.startsWith('ROOT/')
 				? item.slice(4)
-				: `/assets/${type}/${item}`;
+				: `/${type}/${item}`;
 			tags.push(indexes[type]['tag'].replace('{uri}', uri));
 		}
 		return tags.join('\n\t');
@@ -17,10 +17,10 @@ module.exports = function (eleventyConfig) {
 
 	eleventyConfig.addPassthroughCopy({ 'src/assets': '/assets' });
 	eleventyConfig.addPassthroughCopy({
-		'src/_includes/stylesheets': '/assets/stylesheets',
+		'src/_includes/stylesheets': '/stylesheets',
 	});
 	eleventyConfig.addPassthroughCopy({
-		'src/_includes/scripts': '/assets/scripts',
+		'src/_includes/scripts': '/scripts',
 	});
 
 	eleventyConfig.addPlugin(postcssPlugin);
