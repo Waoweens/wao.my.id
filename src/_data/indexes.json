@@ -1,10 +1,10 @@
 {
 	"stylesheets": {
-		"tag": "<link rel=\"stylesheet\" href=\"{uri}\" >",
+		"tag": "<link rel=\"stylesheet\" href=\"{uri}\">",
 		"list": ["ROOT/assets/tailwind.css", "index.css", "nowplaying.css"]
 	},
 	"scripts": {
-		"tag": "<script src=\"{uri}\" defer>",
+		"tag": "<script src=\"{uri}\" defer></script>",
 		"list": ["oneko.js", "nowplaying.js"]
 	}
 }
