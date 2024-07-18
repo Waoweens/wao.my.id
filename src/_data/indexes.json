@@ -1,7 +1,7 @@
 {
 	"stylesheets": {
 		"tag": "<link rel=\"stylesheet\" href=\"{uri}\" >",
-		"list": ["index.css", "nowplaying.css"]
+		"list": ["ROOT/assets/tailwind.css", "index.css", "nowplaying.css"]
 	},
 	"scripts": {
 		"tag": "<script src=\"{uri}\" defer>",
