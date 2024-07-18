@@ -12,7 +12,7 @@ module.exports = function (eleventyConfig) {
 				: `/assets/${type}/${item}`;
 			tags.push(indexes[type]['tag'].replace('{uri}', uri));
 		}
-		return tags.join('\t\n');
+		return tags.join('\n\t');
 	});
 
 	eleventyConfig.addPassthroughCopy({ 'src/assets': '/assets' });
