@@ -16,12 +16,9 @@ module.exports = function (eleventyConfig) {
 	});
 
 	eleventyConfig.addPassthroughCopy({ 'src/assets': '/assets' });
-	eleventyConfig.addPassthroughCopy({
-		'src/_includes/stylesheets': '/stylesheets',
-	});
-	eleventyConfig.addPassthroughCopy({
-		'src/_includes/scripts': '/scripts',
-	});
+	// stylesheets copying handled by PostCSS plugin
+	// eleventyConfig.addPassthroughCopy({ 'src/stylesheets': '/stylesheets' });
+	eleventyConfig.addPassthroughCopy({ 'src/scripts': '/scripts' });
 
 	eleventyConfig.addPlugin(postcssPlugin);
 
