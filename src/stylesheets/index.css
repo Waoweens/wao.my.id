@@ -4,29 +4,11 @@
 }
 
 body {
-	background-color: black;
-	padding: 0.5rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+	@apply w-full flex flex-col items-center bg-[#BDB5E6]
 }
 
 main {
-	max-width: 60rem;
-}
-
-.main-img {
-	max-width: 400px;
-}
-
-.flex {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
-
-.border {
-	border: 1px solid white;
+	@apply bg-gray-700 max-w-4xl p-4;
 }
 
 .marquee {
