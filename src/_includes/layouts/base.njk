@@ -35,9 +35,15 @@
 	{/each#}
 </head>
 <body>
+	<header>
+		{% include 'components/header.njk' %}
+	</header>
 	{# {% include 'components/nowplaying.njk' %} #}
 	<main class="">
 		{% block main %}{% endblock %}
 	</main>
+	<footer>
+		{% include 'components/footer.njk' %}
+	</footer>
 </body>
 </html>
