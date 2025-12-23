@@ -327,7 +327,9 @@
 				<h2>Edit entry</h2>
 
 				<h3>Key</h3>
-				<span><pre id="edit-key">translation_key</pre></span>
+				<span>
+					<pre id="edit-key">translation_key</pre>
+				</span>
 				<h3>Source</h3>
 				<span id="edit-source">reference_value</span>
 				<h3>Target</h3>
@@ -661,8 +663,8 @@
 
 			search.fuse.vanilla = new Fuse(search.vanilla, {
 				keys: [
-					"key",
-					...vanillaLanguages
+					...vanillaLanguages,
+					"key"
 				],
 			});
 
@@ -685,6 +687,7 @@
 
 		editBox.addEventListener("input", () => {
 			/* global project, selectedEntry */
+			console.log('input detected')
 			const targetLang = Object.keys(project.target)[0];
 			const newValue = editValue.value;
 			project.target[targetLang][selectedEntry] = newValue;
@@ -747,7 +750,7 @@
 					// show entry details in sidebar
 					editKey.textContent = key;
 					editSource.textContent = value;
-					editValue.value = targetValue;
+					editValue.value = project.target[targetLang][key] || "";
 				});
 				tableBody.appendChild(tr);
 			});
