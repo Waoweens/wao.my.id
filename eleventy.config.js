@@ -15,6 +15,10 @@ module.exports = function (eleventyConfig) {
 		return tags.join('\n\t');
 	});
 
+	eleventyConfig.setServerOptions({
+		host: "0.0.0.0"
+	})
+
 	eleventyConfig.addPassthroughCopy({ 'src/assets': '/assets' });
 	// stylesheets copying handled by PostCSS plugin
 	// eleventyConfig.addPassthroughCopy({ 'src/stylesheets': '/stylesheets' });
