@@ -31,7 +31,7 @@ async def read_root():
 
 _now_playing_cache: dict | None = None
 _now_playing_cache_timestamp = 0
-now_playing_cache_ttl = 60 # seconds
+now_playing_cache_ttl = 30 # seconds
 
 @app.get('/nowplaying')
 async def now_playing(request: Request, client: AsyncClient = Depends(get_client)):
