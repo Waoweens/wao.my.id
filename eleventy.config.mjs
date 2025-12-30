@@ -1,10 +1,11 @@
-const postcssPlugin = require('@jgarber/eleventy-plugin-postcss');
-const indexes = require('./src/_data/indexes.json');
+import postcssPlugin from "@jgarber/eleventy-plugin-postcss";
+import indexes from './src/_data/indexes.json' with { type: 'json' };
+
+import 'dotenv/config';
 
 /** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
-module.exports = function (eleventyConfig) {
+export default async function (eleventyConfig) {
 	eleventyConfig.addShortcode('loadIndex', (type) => {
-		console.log(indexes);
 		let tags = [];
 		for (const item of indexes[type]['list']) {
 			const uri = item.startsWith('ROOT/')
@@ -26,9 +27,11 @@ module.exports = function (eleventyConfig) {
 
 	eleventyConfig.addPlugin(postcssPlugin);
 
-	return {
-		dir: {
-			input: 'src',
-		},
-	};
 };
+
+export const config = {
+	dir: {
+		input: 'src',
+		includes: '_includes',
+	}
+}
