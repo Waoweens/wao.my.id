@@ -10,7 +10,7 @@ body {
 }
 
 main {
-	@apply bg-gray-700 w-full max-w-4xl p-4;
+	@apply bg-gray-800 w-full max-w-4xl p-4;
 }
 header {
 	@apply bg-black p-4 w-full;
