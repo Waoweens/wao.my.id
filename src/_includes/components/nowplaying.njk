@@ -1,9 +1,79 @@
-<div id="nowPlaying">
-	<p>what i playing:</p>
-	<div id="songContainer">
-		<img id="songArtwork">
-		<p id="songTitle"></p>
-		<p id="songArtist"></p>
-		<p id="songAlbum"></p>
+<div id="nowPlaying" class="mt-6 flex flex-col border p-4 bg-gray-800 relative">
+	<p>what i'm listening to:</p>
+	<noscript>This feature requires client JavaScript.</noscript>
+	<div class="flex items-center gap-4 mt-2">
+		<img id="songArtwork" class="w-24 h-24">
+		<div>
+			<a target="_blank" id="songTitle" class="text-xl font-bold"></a>
+			<div class="flex flex-col">
+				<div class="flex gap-2"><span class="opacity-50">by</span>
+					<ul class="inline" id="songArtists"></ul>
+				</div>
+				<div class="flex gap-2"><span class="opacity-50">in</span><a target="_blank" id="songAlbum"></a></div>
+			</div>
+		</div>
 	</div>
+	<a target="_blank" href="https://open.spotify.com/">
+		<img class="absolute w-8 h-8 bottom-4 right-4 opacity-25"
+			src="https://storage.googleapis.com/pr-newsroom-wp/1/2023/05/Spotify_Primary_Logo_RGB_White-300x300.png">
+	</a>
 </div>
+
+<script>
+	const fetchError = document.getElementById('fetchError');
+	const artwork = document.getElementById('songArtwork');
+	const title = document.getElementById('songTitle');
+	const artists = document.getElementById('songArtists');
+	const album = document.getElementById('songAlbum');
+
+	async function mainLoop() {
+		let response;
+		let fetchError;
+		try {
+			response = await fetch('{{environment.backendURL }}/nowplaying');
+		} catch (error) {
+			fetchError = error;
+		}
+
+		if (!response || !response.ok || fetchError) {
+			artwork.src = '';
+			title.textContent = 'Error getting status: ' + (fetchError ? fetchError : `${response.status} ${response.statusText}`);
+			artists.textContent = '?';
+			album.textContent = '?';
+			return;
+		}
+
+
+		const data = await response.json();
+		console.log(data);
+
+		if (data.playing) {
+			artwork.src = data.album.images;
+
+			title.textContent = data.track.name;
+			title.href = data.track.url;
+
+			artists.innerHTML = '';
+			data.artists.forEach((artist, index) => {
+				const li = document.createElement('li');
+				const a = document.createElement('a');
+				a.textContent = artist.name + (index < data.artists.length - 1 ? ', ' : '');
+				a.href = artist.url;
+				a.target = '_blank';
+				li.appendChild(a);
+				artists.appendChild(li);
+			});
+
+			album.textContent = data.album.name;
+			album.href = data.album.url;
+		} else {
+			artwork.src = '/assets/gray.svg';
+			title.textContent = 'Not Playing';
+			artists.innerHTML = '?';
+			album.textContent = '?';
+		}
+	}
+
+	mainLoop();
+	setInterval(mainLoop, 15 * 1000);
+</script>

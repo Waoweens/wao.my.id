@@ -62,3 +62,11 @@ footer {
 .opaque {
 	opacity: 0.5;
 }
+
+.none {
+	@apply hidden;
+}
+
+#songArtists li {
+	@apply inline;
+}

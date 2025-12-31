@@ -5,6 +5,6 @@
 	},
 	"scripts": {
 		"tag": "<script src=\"{uri}\" defer></script>",
-		"list": ["oneko.js", "nowplaying.js"]
+		"list": ["oneko.js"]
 	}
 }
