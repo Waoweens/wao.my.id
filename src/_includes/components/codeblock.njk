@@ -1,0 +1,14 @@
+<figure class="border-white border flex flex-col bg-gray-600">
+	<figcaption class="flex justify-between py-2 px-4">
+		<span>{{ language }}</span>
+		<button
+			type="button"
+			class="underline cursor-pointer"
+			data-copy-content="{{ content | escape | trim }}"
+			onclick="navigator.clipboard.writeText(this.dataset.copyContent).catch(err => alert(err));"
+		>
+			Copy
+		</button>
+	</figcaption>
+	{% highlight language | lower %}{{ content | safe }}{% endhighlight %}
+</figure>
