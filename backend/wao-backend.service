@@ -1,0 +1,28 @@
+[Unit]
+Description=wao.my.id Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+
+WorkingDirectory=/var/www/wao.my.id/backend
+Environment="PYTHONUNBUFFERED=1"
+EnvironmentFile=/var/www/wao.my.id/.env
+NoNewPrivileges=true
+PrivateTmp=true
+
+ExecStart=/var/www/wao.my.id/venv/bin/uvicorn \
+			main:app \
+			--host 127.0.0.1 \
+			--port 8101 \
+			--proxy-headers \
+			--forwarded-allow-ips=127.0.0.1 \
+			--workers 4
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
