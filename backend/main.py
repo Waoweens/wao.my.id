@@ -53,7 +53,6 @@ async def now_playing(request: Request, client: AsyncClient = Depends(get_client
 	
 	now = time.time()
 	if _now_playing_cache and (now - _now_playing_cache_timestamp) < now_playing_cache_ttl:
-		print('Using cached now playing data...')
 		return _now_playing_cache
 
 	access_token = await spotify.get_access_token(client)
@@ -98,8 +97,6 @@ async def now_playing(request: Request, client: AsyncClient = Depends(get_client
 			'url': item.get('external_urls', {}).get('spotify')
 		}
 	}
-
-	print(result)
 
 	_now_playing_cache = result
 	_now_playing_cache_timestamp = now

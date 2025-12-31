@@ -17,16 +17,13 @@ class SpotifyAuth:
 		self.expires_at: float = 0
 
 		if os.getenv('DEV_MODE') == 'True':
-			print('SpotifyAuth: using developer tokens')
 			self.access_token = os.getenv('DEV_SPOTIFY_ACCESS_TOKEN')
 			self.expires_at = float('inf')
 
 	async def get_access_token(self, client: AsyncClient) -> str:
 		if self.access_token and time.time() < self.expires_at - 30:
-			print('Using cached Spotify access token...')
 			return self.access_token
 		
-		print('Refreshing Spotify access token...')
 		
 		basic_auth = b64encode(f"{self.client_id}:{self.client_secret}".encode()).decode()
 
@@ -44,7 +41,6 @@ class SpotifyAuth:
 
 		res.raise_for_status()
 		data = res.json()
-		print('spotify auth:', data)
 
 		self.access_token = data['access_token']
 		self.expires_at = time.time() + data['expires_in']
