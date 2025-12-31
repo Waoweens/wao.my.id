@@ -2,6 +2,7 @@ import os
 import time
 
 from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from httpx import AsyncClient
@@ -22,6 +23,19 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+origins = [
+	'http://localhost:8080',
+	'https://wao.my.id'
+]
+
+app.add_middleware(
+	CORSMiddleware,
+	allow_origins=origins,
+	allow_credentials=True,
+	allow_methods=['*'],
+	allow_headers=['*'],
+)
+
 def get_client(request: Request) -> AsyncClient:
 	return request.state.client
 
@@ -31,7 +45,7 @@ async def read_root():
 
 _now_playing_cache: dict | None = None
 _now_playing_cache_timestamp = 0
-now_playing_cache_ttl = 30 # seconds
+now_playing_cache_ttl = 5 if os.environ.get('DEV_MODE') == 'True' else 30 # seconds
 
 @app.get('/nowplaying')
 async def now_playing(request: Request, client: AsyncClient = Depends(get_client)):
@@ -85,6 +99,33 @@ async def now_playing(request: Request, client: AsyncClient = Depends(get_client
 		}
 	}
 
+	print(result)
+
 	_now_playing_cache = result
 	_now_playing_cache_timestamp = now
 	return result
+
+@app.get('/nowplaying/example')
+def now_playing_example():
+	return {
+		'playing': True,
+		'artists': [
+			{
+				'name': 'underscores',
+				'url': 'https://open.spotify.com/artist/7HfUJxeVTgrvhk0eWHFzV7'
+			},
+			{
+				'name': 'gabby start',
+				'url': 'https://open.spotify.com/artist/33L1klom7IXmoAP8fjrGm9'
+			}
+		],
+		'album': {
+			'name': 'Wallsocket',
+			'url': 'https://open.spotify.com/album/0mQPq9INcTC48siErksOrl',
+			'images': 'https://i.scdn.co/image/ab67616d00001e02f03fa3edc4db4b145655550d'
+		},
+		'track': {
+			'name': 'Locals (Girls like us) [with gabby start]',
+			'url': 'https://open.spotify.com/track/42FM6tM3n06euZCvpJn3dn'
+		}
+	}
