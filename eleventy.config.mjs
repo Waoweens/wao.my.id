@@ -3,7 +3,7 @@ import indexes from './src/_data/indexes.json' with { type: 'json' };
 
 import 'dotenv/config';
 
-/** @param {import("@11ty/eleventy").UserConfig} eleventyConfig */
+/** @param {import('@11ty/eleventy/UserConfig').default} eleventyConfig*/
 export default async function (eleventyConfig) {
 	eleventyConfig.addShortcode('loadIndex', (type) => {
 		let tags = [];
