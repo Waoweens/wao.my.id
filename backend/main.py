@@ -11,9 +11,9 @@ from lib import SpotifyAuth
 
 load_dotenv()
 spotify = SpotifyAuth(
-	client_id=os.getenv('SPOTIFY_CLIENT_ID'),
-	client_secret=os.getenv('SPOTIFY_CLIENT_SECRET'),
-	refresh_token=os.getenv('SPOTIFY_REFRESH_TOKEN')
+	client_id=os.getenv('SPOTIFY_CLIENT_ID'), # pyright: ignore[reportArgumentType]
+	client_secret=os.getenv('SPOTIFY_CLIENT_SECRET'), # pyright: ignore[reportArgumentType]
+	refresh_token=os.getenv('SPOTIFY_REFRESH_TOKEN') # pyright: ignore[reportArgumentType]
 )
 
 @asynccontextmanager
@@ -72,7 +72,7 @@ async def now_playing(request: Request, client: AsyncClient = Depends(get_client
 		)
 	
 	data: dict = res.json()
-	item: dict = data.get('item')
+	item: dict = data.get('item') # type: ignore
 	album: dict = item.get('album', {})
 	images: list[dict] = album.get('images', [])
 

@@ -44,4 +44,4 @@ class SpotifyAuth:
 
 		self.access_token = data['access_token']
 		self.expires_at = time.time() + data['expires_in']
-		return self.access_token
+		return self.access_token # type: ignore
