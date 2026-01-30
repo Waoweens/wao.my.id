@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="robots" content="noindex">
+
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		#submit-form:has(#anonymous:checked) #name {
+			pointer-events: none;
+			opacity: 0.5;
+			user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+	<article>
+		<section>
+			<h1>Guestbook</h1>
+			<noscript>
+				<p>JavaScript disabled. Everything should still function, except for automatic refreshing of entries.
+				</p>
+			</noscript>
+			<form id="submit-form" method="post">
+				<div>
+					<input type="checkbox" id="anonymous" name="anonymous" checked>
+					<label for="anonymous">Post anonymously</label>
+				</div>
+				<div>
+					<label for="name">Name:</label>
+					<input type="text" id="name" name="name">
+				</div>
+				<div>
+					<label for="message">Message:</label>
+					<textarea id="message" name="message" required maxlength="512"></textarea>
+					<span id="message-length">0 / 512</span>
+				</div>
+				<div>
+					<button type="submit">Submit</button>
+				</div>
+			</form>
+		</section>
+		<section>
+			<h2>Entries</h2>
+			<div id="entries">
+				<!-- Guestbook entries will be dynamically loaded here -->
+			</div>
+		</section>
+	</article>
+
+	<script>
+		const anonymous = document.getElementById('anonymous');
+		const name = document.getElementById('name');
+		const message = document.getElementById('message');
+		const messageLength = document.getElementById('message-length');
+
+		name.disabled = true;
+		anonymous.addEventListener('change', function () {
+			if (this.checked) {
+				name.disabled = true;
+				name.value = '';
+			} else {
+				name.disabled = false;
+			}
+		});
+
+		message.addEventListener('input', function () {
+			messageLength.textContent = `${this.value.length} / 512`;
+		});
+	</script>
+</body>
+
+</html>

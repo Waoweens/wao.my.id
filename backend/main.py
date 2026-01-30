@@ -1,8 +1,9 @@
 import os
 import time
 
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from httpx import AsyncClient
@@ -35,6 +36,8 @@ app.add_middleware(
 	allow_methods=['*'],
 	allow_headers=['*'],
 )
+
+templates = Jinja2Templates(directory="backend/templates")
 
 def get_client(request: Request) -> AsyncClient:
 	return request.state.client
@@ -126,3 +129,14 @@ def now_playing_example():
 			'url': 'https://open.spotify.com/track/42FM6tM3n06euZCvpJn3dn'
 		}
 	}
+
+@app.get('/guestbook')
+def guestbook(request: Request):
+	return templates.TemplateResponse(
+		request=request,
+		name="guestbook.html"
+	)
+
+@app.post('/guestbook')
+def guestbook_post():
+	return {'message': 'Guestbook entry submitted!'}
