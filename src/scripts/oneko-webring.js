@@ -160,6 +160,22 @@
 			mousePosY = event.clientY;
 		});
 
+		// make oneko.js track mouse in iframe
+		// https://github.com/adryd325/oneko.js/issues/30#issuecomment-3237848920
+		// plus my additions for cross-origin iframes
+		document.querySelectorAll('iframe').forEach(iframe => {
+			let rect = iframe.getBoundingClientRect();
+			window.addEventListener('resize', () => {
+				rect = iframe.getBoundingClientRect();
+			});
+			window.addEventListener("message", event => {
+				if (event.data && event.data.type === "mousemove") {
+					mousePosX = event.data.x + rect.left;
+					mousePosY = event.data.y + rect.top;
+				}
+			});
+		});
+
 		window.requestAnimationFrame(onAnimationFrame);
 	}
 

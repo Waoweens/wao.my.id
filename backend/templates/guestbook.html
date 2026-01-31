@@ -219,6 +219,17 @@
 		message.addEventListener('input', function () {
 			messageLength.textContent = `${this.value.length} / 512`;
 		});
+
+		// make oneko.js track mouse in iframe
+		// https://github.com/adryd325/oneko.js/issues/30#issuecomment-3237848920
+		// plus my additions for cross-origin iframes
+		document.addEventListener("mousemove", event => {
+			window.parent.postMessage({
+				type: "mousemove",
+				x: event.clientX,
+				y: event.clientY
+			}, "*");
+		});
 	</script>
 </body>
 
