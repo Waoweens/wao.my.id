@@ -13,6 +13,79 @@
 			padding: 0;
 			width: 100%;
 			height: 100%;
+			overflow: hidden;
+		}
+
+		p {
+			margin: 0;
+		}
+
+		h2 {
+			margin: 0;
+			margin-bottom: 1rem;
+			font-size: large;
+		}
+
+		.guestbook {
+			box-sizing: border-box;
+			font-family: 'IBM Plex Sans', sans-serif;
+			display: flex;
+			height: 100%;
+			background-color: oklch(27.8% 0.033 256.848);
+			color: white;
+		}
+
+		.monospace {
+			font-family: 'IBM Plex Mono', monospace;
+		}
+
+		.bold {
+			font-weight: bold;
+		}
+
+		.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip-path: inset(50%);
+			white-space: nowrap;
+			border-width: 0;
+		}
+
+		.submit-container {
+			width: 18rem;
+			padding: 1rem;
+			border-right: 3px solid white;
+		}
+
+		#submit-form {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5rem;
+		}
+
+		.name-container {
+			display: flex;
+			gap: 0.5rem;
+		}
+
+		#name {
+			font-family: 'IBM Plex Sans', sans-serif;
+			flex: 1;
+		}
+
+		.message-container {
+			display: flex;
+			flex-direction: column;
+			gap: 0.25rem;
+		}
+
+		#message {
+			font-family: 'IBM Plex Serif', serif;
+			resize: vertical;
 		}
 
 		#submit-form:has(#anonymous:checked) #name {
@@ -20,27 +93,85 @@
 			opacity: 0.5;
 			user-select: none;
 		}
+
+
+		.entries-container {
+			flex: 1;
+			min-height: 0;
+			overflow-y: auto;
+		}
+
+		.entries {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.entries li {
+			border-bottom: 3px solid white;
+		}
+
+		.entries header {
+			background-color: oklch(44.2% 0.017 285.786);
+			padding: 0.5rem;
+		}
+
+		.entries p {
+			padding: 1rem;
+			background-color: oklch(27.4% 0.006 286.033);
+		}
+
+		.entry-body {
+			font-family: 'IBM Plex Serif', serif;
+			text-align: justify;
+			white-space: pre-wrap;
+		}
+
+		@media (max-width: 40rem) {
+			html, body {
+				overflow: auto;
+			}
+
+			.guestbook {
+				flex-direction: column;
+				height: auto;
+			}
+
+			.submit-container {
+				box-sizing: border-box;
+				padding: 0;
+				border: none;
+				width: 100%;
+				padding: 1rem;
+			}
+
+			.entries-container {
+				padding: 0;
+				overflow: visible;
+			}
+		}
 	</style>
 </head>
 
 <body>
-	<article>
-		<section>
-			<h1>Guestbook</h1>
+	<article class="guestbook">
+		<section class="submit-container">
+			<h2>Submit your message</h2>
 			<noscript>
-				<p>JavaScript disabled. Everything should still function, except for automatic refreshing of entries.
-				</p>
+				<p>JavaScript disabled. Everything should still function.</p>
 			</noscript>
 			<form id="submit-form" method="post">
 				<div>
 					<input type="checkbox" id="anonymous" name="anonymous" checked>
 					<label for="anonymous">Post anonymously</label>
 				</div>
-				<div>
+				<div class="name-container">
 					<label for="name">Name:</label>
-					<input type="text" id="name" name="name">
+					<input type="text" id="name" name="name" maxlength="128">
 				</div>
-				<div>
+				<div class="message-container">
 					<label for="message">Message:</label>
 					<textarea id="message" name="message" required maxlength="512"></textarea>
 					<span id="message-length">0 / 512</span>
@@ -50,11 +181,22 @@
 				</div>
 			</form>
 		</section>
-		<section>
-			<h2>Entries</h2>
-			<div id="entries">
-				<!-- Guestbook entries will be dynamically loaded here -->
-			</div>
+		<section class="entries-container">
+			<ul class="entries">
+				<h2 class="sr-only">Guestbook Entries</h2>
+				{% for entry in entries %}
+				<li>
+					<article>
+						<h3 class="sr-only">Guestbook Entry</h3>
+						<header>
+							<span class="monospace">[{{entry.id}}]</span> <span class="bold">{{ entry.name }}</span>
+							<time class="monospace" datetime="{{ entry.createdRaw }}">({{ entry.created }})</time>
+						</header>
+						<p class="entry-body">{{ entry.message }}</p>
+					</article>
+				</li>
+				{% endfor %}
+			</ul>
 		</section>
 	</article>
 

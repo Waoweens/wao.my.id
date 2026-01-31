@@ -4,9 +4,13 @@ import time
 from fastapi import FastAPI, Request, Depends, HTTPException, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
+from typing import Annotated, Optional
 from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from httpx import AsyncClient
+from psycopg_pool import ConnectionPool
+from datetime import datetime, timezone
 
 from lib import SpotifyAuth
 
@@ -15,6 +19,12 @@ spotify = SpotifyAuth(
 	client_id=os.getenv('SPOTIFY_CLIENT_ID'), # pyright: ignore[reportArgumentType]
 	client_secret=os.getenv('SPOTIFY_CLIENT_SECRET'), # pyright: ignore[reportArgumentType]
 	refresh_token=os.getenv('SPOTIFY_REFRESH_TOKEN') # pyright: ignore[reportArgumentType]
+)
+
+pool = ConnectionPool(
+	os.getenv('DB_URL'),
+	min_size=1,
+	max_size=5
 )
 
 @asynccontextmanager
@@ -131,12 +141,75 @@ def now_playing_example():
 	}
 
 @app.get('/guestbook')
-def guestbook(request: Request):
+def guestbook(request: Request, start: int = 0):
+	print(start)
+	with pool.connection() as conn:
+		with conn.cursor() as cur:
+			cur.execute(
+				'SELECT id, name, message, created FROM guestbook ORDER BY id DESC LIMIT 100'
+			)
+			entries = cur.fetchall()
+
+	print(entries)
+
+	formatted_entries = []
+	for entry in entries:
+		id: int
+		name: Optional[str]
+		message: str
+		created: datetime
+		id, name, message, created = entry
+		formatted_entries.append({
+			'id': id,
+			'name': name if name is not None else 'Anonymous',
+			'message': message,
+			'created': created.astimezone(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC'),
+			'createdRaw': created.astimezone(timezone.utc).isoformat()
+		})
+
+	print(formatted_entries)
+
 	return templates.TemplateResponse(
 		request=request,
-		name="guestbook.html"
+		name="guestbook.html",
+		context={
+			'entries': formatted_entries,
+			'start': start
+		}
 	)
 
 @app.post('/guestbook')
-def guestbook_post():
-	return {'message': 'Guestbook entry submitted!'}
+def guestbook_post(
+	message: Annotated[str, Form()],
+	anonymous: Annotated[bool, Form()] = False,
+	name: Annotated[Optional[str], Form()] = None
+):
+	print(f'Guestbook entry: anonymous={anonymous}, name={name}, message={message}')
+
+	if anonymous:
+		name = None
+
+	if name is not None and len(name.strip()) == 0:
+		name = None
+
+	if name is not None and len(name.strip()) > 128:
+		raise HTTPException(status_code=400, detail='Name is too long (max 128 characters)')
+	
+	if len(message.strip()) == 0:
+		raise HTTPException(status_code=400, detail='Message cannot be empty')
+	
+	if len(message.strip()) > 512:
+		raise HTTPException(status_code=400, detail='Message is too long (max 512 characters)')
+	
+	name = name.strip() if name is not None else None
+	message = message.strip()
+
+	with pool.connection() as conn:
+		with conn.cursor() as cur:
+			cur.execute(
+				'INSERT INTO guestbook (name, message) VALUES (%s, %s)',
+				(name, message)
+			)
+		conn.commit()
+
+	return RedirectResponse(url='/guestbook', status_code=303)
