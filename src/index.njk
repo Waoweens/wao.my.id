@@ -45,17 +45,24 @@
 
 		<h1 class="mb-2 text-xl">Guestbook</h1>
 		<iframe class="w-full h-110 border-3" src="{{ environment.backendURL }}/guestbook" loading="lazy" title="guestbook"></iframe>
-		<a class="block w-full text-end underline" href="{{ environment.backendURL }}/guestbook" target="_blank">open full page</a>
+		<div class="flex justify-between">
+			<div aria-hidden="true"></div>
+			<a class="underline" href="{{ environment.backendURL }}/guestbook" target="_blank">open full page</a>
+		</div>
 
-		<h2 class="mt-4 mb-2 text-xl">88x31</h2>
-		<a data-neko="true" target="_blank" href="https://wao.my.id">
-			<img class="mb-2" src="/assets/88x31.png" alt="wao.my.id" width="88" height="31">
-		</a>
+		<details>
+			<summary class="underline cursor-pointer">see 88x31 code</summary>
+			<a class="inline-block" data-neko="true" target="_blank" href="https://wao.my.id">
+				<img class="" src="/assets/88x31.png" alt="wao.my.id" width="88" height="31">
+			</a>
 {% codeblock "HTML" %}
 <a data-neko="true" target="_blank" href="https://wao.my.id">
 	<img src="https://wao.my.id/assets/88x31.png" alt="wao.my.id" width="88" height="31">
 </a>
 {% endcodeblock %}
+		</details>
+
+
 
 
 	</section>
