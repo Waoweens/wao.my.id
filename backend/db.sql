@@ -6,3 +6,10 @@ CREATE TABLE guestbook (
 	message TEXT NOT NULL,
 	created TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE TABLE guestbook_reports (
+	id SERIAL PRIMARY KEY,
+	entry_id INTEGER NOT NULL REFERENCES guestbook(id) ON DELETE CASCADE,
+	reason TEXT NOT NULL,
+	created TIMESTAMPTZ NOT NULL DEFAULT now()
+);

@@ -213,3 +213,56 @@ def guestbook_post(
 		conn.commit()
 
 	return RedirectResponse(url='/guestbook', status_code=303)
+
+@app.get('/guestbook/report')
+def guestbook_report(request: Request, id: int = 0):
+	with pool.connection() as conn:
+		with conn.cursor() as cur:
+			cur.execute(
+				'SELECT id, name, message, created FROM guestbook WHERE id = %s',
+				(str(id),)
+			)
+			entry = cur.fetchone()
+			if not entry:
+				raise HTTPException(status_code=404, detail='Guestbook entry not found')
+			
+	formatted_entry = {
+		'id': entry[0],
+		'name': entry[1] if entry[1] is not None else 'Anonymous',
+		'message': entry[2],
+		'created': entry[3].astimezone(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC'),
+		'createdRaw': entry[3].astimezone(timezone.utc).isoformat()
+	}
+
+	return templates.TemplateResponse(
+		request=request,
+		name="guestbook-report.html",
+		context={
+			'entry': formatted_entry,
+		}
+	)
+
+@app.post('/guestbook/report')
+def guestbook_report_post(
+	id: Annotated[int, Form()],
+	reason: Annotated[str, Form()]
+):
+	print(f'Reporting guestbook entry id={id} for reason: {reason}')
+
+	if len(reason.strip()) == 0:
+		raise HTTPException(status_code=400, detail='Reason cannot be empty')
+	
+	if len(reason.strip()) > 512:
+		raise HTTPException(status_code=400, detail='Reason is too long (max 512 characters)')
+	
+	reason = reason.strip()
+
+	with pool.connection() as conn:
+		with conn.cursor() as cur:
+			cur.execute(
+				'INSERT INTO guestbook_reports (entry_id, reason) VALUES (%s, %s)',
+				(str(id), reason)
+			)
+		conn.commit()
+
+	return RedirectResponse(url='/guestbook', status_code=303)
