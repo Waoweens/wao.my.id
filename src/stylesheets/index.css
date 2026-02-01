@@ -6,14 +6,14 @@
 }
 
 body {
-	@apply w-full flex flex-col items-center bg-[#BDB5E6]
+	@apply w-full min-h-screen flex flex-col items-center bg-[#BDB5E6]
 }
 
-main {
-	@apply bg-gray-800 w-full max-w-4xl p-4;
-}
 header {
 	@apply bg-black p-4 w-full;
+}
+main {
+	@apply bg-gray-800 w-full max-w-4xl p-4 grow;
 }
 footer {
 	@apply bg-black w-full max-w-4xl p-4;
