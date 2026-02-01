@@ -26,12 +26,18 @@
 			font-size: large;
 		}
 
+		a {
+			color: inherit;
+			text-decoration: underline;
+		}
+
 		.guestbook {
 			box-sizing: border-box;
 			font-family: 'IBM Plex Sans', sans-serif;
 			display: flex;
 			height: 100%;
-			background-color: oklch(27.8% 0.033 256.848);
+			/* background-color: oklch(27.8% 0.033 256.848); */
+			background-color: oklch(21% 0.034 264.665);
 			color: white;
 		}
 
@@ -41,6 +47,11 @@
 
 		.bold {
 			font-weight: bold;
+		}
+
+		.between {
+			display: flex;
+			justify-content: space-between;
 		}
 
 		.sr-only {
@@ -70,11 +81,16 @@
 		.name-container {
 			display: flex;
 			gap: 0.5rem;
+			align-items: center;
 		}
 
 		#name {
 			font-family: 'IBM Plex Sans', sans-serif;
 			flex: 1;
+			background-color: oklch(44.2% 0.017 285.786);
+			color: white;
+			padding: 0.25rem;
+			font-weight: bold;
 		}
 
 		.message-container {
@@ -86,6 +102,10 @@
 		#message {
 			font-family: 'IBM Plex Serif', serif;
 			resize: vertical;
+			background-color: oklch(27.4% 0.006 286.033);
+			color: white;
+			padding: 0.5rem;
+			height: 10rem;
 		}
 
 		#submit-form:has(#anonymous:checked) #name {
@@ -116,21 +136,31 @@
 		.entries header {
 			background-color: oklch(44.2% 0.017 285.786);
 			padding: 0.5rem;
+			display: flex;
+			flex-direction: column;
 		}
 
-		.entries p {
+		.header-top {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.header-bottom {
+			display: flex;
+			justify-content: space-between;
+		}
+		
+		.entry-body {
+			font-family: 'IBM Plex Serif', serif;
+			white-space: pre-wrap;
 			padding: 1rem;
 			background-color: oklch(27.4% 0.006 286.033);
 		}
 
-		.entry-body {
-			font-family: 'IBM Plex Serif', serif;
-			text-align: justify;
-			white-space: pre-wrap;
-		}
-
 		@media (max-width: 40rem) {
-			html, body {
+
+			html,
+			body {
 				overflow: auto;
 			}
 
@@ -145,11 +175,16 @@
 				border: none;
 				width: 100%;
 				padding: 1rem;
+				border-bottom: 3px solid white;
 			}
 
 			.entries-container {
 				padding: 0;
 				overflow: visible;
+			}
+
+			#message {
+				height: 5rem;
 			}
 		}
 	</style>
@@ -157,6 +192,7 @@
 
 <body>
 	<article class="guestbook">
+		<h1 class="sr-only">Guestbook</h1>
 		<section class="submit-container">
 			<h2>Submit your message</h2>
 			<noscript>
@@ -189,8 +225,16 @@
 					<article>
 						<h3 class="sr-only">Guestbook Entry</h3>
 						<header>
-							<span class="monospace">[{{entry.id}}]</span> <span class="bold">{{ entry.name }}</span>
-							<time class="monospace" datetime="{{ entry.createdRaw }}">({{ entry.created }})</time>
+							<div class="header-top">
+								<span class="monospace">[{{entry.id}}]</span>
+								<time class="monospace" datetime="{{ entry.createdRaw }}">{{ entry.created }}</time>
+							</div>
+							<div class="header-bottom">
+								<span class="bold">{{ entry.name }}</span>
+								<div class="monospace">
+									[<a href="/guestbook/report?id={{ entry.id }}">Report</a>]
+								</div>
+							</div>
 						</header>
 						<p class="entry-body">{{ entry.message }}</p>
 					</article>
