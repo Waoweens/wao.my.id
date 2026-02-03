@@ -168,6 +168,9 @@
 			window.addEventListener('resize', () => {
 				rect = iframe.getBoundingClientRect();
 			});
+			window.addEventListener('scroll', () => {
+				rect = iframe.getBoundingClientRect();
+			});
 			window.addEventListener("message", event => {
 				if (event.data && event.data.type === "mousemove") {
 					mousePosX = event.data.x + rect.left;
