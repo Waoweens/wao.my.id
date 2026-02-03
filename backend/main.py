@@ -22,7 +22,7 @@ spotify = SpotifyAuth(
 )
 
 pool = ConnectionPool(
-	os.getenv('DB_URL'),
+	os.getenv('DB_URL') or '',
 	min_size=1,
 	max_size=5
 )
