@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from httpx import AsyncClient
 from psycopg_pool import ConnectionPool
+from psycopg.types.json import Jsonb
 from datetime import datetime, timezone
 
 from lib import SpotifyAuth
@@ -63,6 +64,8 @@ now_playing_cache_ttl = 5 if os.environ.get('DEV_MODE') == 'True' else 30 # seco
 @app.get('/nowplaying')
 async def now_playing(request: Request, client: AsyncClient = Depends(get_client)):
 	global _now_playing_cache, _now_playing_cache_timestamp
+
+	print('test')
 	
 	now = time.time()
 	if _now_playing_cache and (now - _now_playing_cache_timestamp) < now_playing_cache_ttl:
@@ -75,41 +78,78 @@ async def now_playing(request: Request, client: AsyncClient = Depends(get_client
 		headers = {'Authorization': f'Bearer {access_token}'}
 	)
 
+	item: dict | None = None
+	is_playing = False
+
 	if res.status_code == 204:
-		return {'playing': False}
-	
-	if res.status_code != 200:
+		print('Spotify returned 204')
+	elif res.status_code != 200:
 		raise HTTPException(
 			status_code=res.status_code,
 			detail=f'Failed to fetch currently playing track from Spotify: {res.text}'
 		)
-	
-	data: dict = res.json()
-	item: dict = data.get('item') # type: ignore
-	album: dict = item.get('album', {})
-	images: list[dict] = album.get('images', [])
+	else:
+		data: dict = res.json()
+		item = data.get('item')
+		is_playing = data.get('is_playing', False)
 
 	if not item:
-		return {'playing': False}
-	
-	result = {
-		'playing': data['is_playing'],
-		'artists': [
-			{
-				'name': artist['name'],
-				'url': artist['external_urls']['spotify']
-			} for artist in item.get('artists', [])
-		],
-		'album': {
-			'name': album.get('name'),
-			'url': album.get('external_urls', {}).get('spotify'),
-			'images': images[1]['url'] if len(images) == 3 else images[0]['url']
-		},
-		'track': {
-			'name': item.get('name'),
-			'url': item.get('external_urls', {}).get('spotify')
+		result = {
+			'playing': False,
+			'history': []
 		}
-	}
+	else:
+		album: dict = item.get('album', {})
+		images: list[dict] = album.get('images', [])
+		result = {
+			'artists': [
+				{
+					'name': artist['name'],
+					'url': artist['external_urls']['spotify']
+				} for artist in item.get('artists', [])
+			],
+			'album': {
+				'name': album.get('name'),
+				'url': album.get('external_urls', {}).get('spotify'),
+				'images': images[1]['url'] if len(images) == 3 else images[0]['url']
+			},
+			'track': {
+				'name': item.get('name'),
+				'url': item.get('external_urls', {}).get('spotify')
+			},
+			'playing': is_playing,
+			'history': []
+		}
+
+	with pool.connection() as conn:
+		with conn.cursor() as cur:
+			cur.execute(
+				'SELECT track_id, track, listened_at FROM listening_history ORDER BY id DESC LIMIT 5'
+			)
+			history_entries = cur.fetchall()
+
+			history = []
+			for track_id, track, listened_at in history_entries:
+				history.append({
+					'listenedAt': listened_at.astimezone(timezone.utc).isoformat(),
+					'track': track.get('track', {}).get('name'),
+					'album': track.get('album', {}).get('name'),
+					'artists': [artist.get('name') for artist in track.get('artists', [])]
+				})
+
+			if item and history_entries:
+				last_entry_id = history_entries[0][0]
+
+				if item['id'] == last_entry_id:
+					print('Inserting new listening history entry')
+					cur.execute(
+						'INSERT INTO listening_history (track_id, track) VALUES (%s, %s)',
+						(item['id'], Jsonb(result))
+					)
+
+		conn.commit()
+
+	result['history'] = history
 
 	_now_playing_cache = result
 	_now_playing_cache_timestamp = now
@@ -117,8 +157,7 @@ async def now_playing(request: Request, client: AsyncClient = Depends(get_client
 
 @app.get('/nowplaying/example')
 def now_playing_example():
-	return {
-		'playing': True,
+	example = {
 		'artists': [
 			{
 				'name': 'underscores',
@@ -140,9 +179,22 @@ def now_playing_example():
 		}
 	}
 
+	with pool.connection() as conn:
+		with conn.cursor() as cur:
+			# insert example into listening_history
+			cur.execute(
+				'INSERT INTO listening_history (track_id, track) VALUES (%s, %s)',
+				("42FM6tM3n06euZCvpJn3dn", Jsonb(example))
+			)
+		conn.commit()
+
+	example['playing'] = True
+
+	return example
+
 @app.get('/guestbook')
 def guestbook(request: Request, start: int = 0):
-	print(start)
+	# print(start)
 	with pool.connection() as conn:
 		with conn.cursor() as cur:
 			cur.execute(
@@ -150,7 +202,7 @@ def guestbook(request: Request, start: int = 0):
 			)
 			entries = cur.fetchall()
 
-	print(entries)
+	# print(entries)
 
 	formatted_entries = []
 	for entry in entries:
@@ -167,7 +219,7 @@ def guestbook(request: Request, start: int = 0):
 			'createdRaw': created.astimezone(timezone.utc).isoformat()
 		})
 
-	print(formatted_entries)
+	# print(formatted_entries)
 
 	return templates.TemplateResponse(
 		request=request,
@@ -184,7 +236,7 @@ def guestbook_post(
 	anonymous: Annotated[bool, Form()] = False,
 	name: Annotated[Optional[str], Form()] = None
 ):
-	print(f'Guestbook entry: anonymous={anonymous}, name={name}, message={message}')
+	# print(f'Guestbook entry: anonymous={anonymous}, name={name}, message={message}')
 
 	if anonymous:
 		name = None
@@ -247,7 +299,7 @@ def guestbook_report_post(
 	id: Annotated[int, Form()],
 	reason: Annotated[str, Form()]
 ):
-	print(f'Reporting guestbook entry id={id} for reason: {reason}')
+	# print(f'Reporting guestbook entry id={id} for reason: {reason}')
 
 	if len(reason.strip()) == 0:
 		raise HTTPException(status_code=400, detail='Reason cannot be empty')

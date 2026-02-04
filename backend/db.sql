@@ -13,3 +13,10 @@ CREATE TABLE guestbook_reports (
 	reason TEXT NOT NULL,
 	created TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE TABLE listening_history (
+	id SERIAL PRIMARY KEY,
+	track_id TEXT NOT NULL,
+	track JSONB NOT NULL,
+	listened_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
