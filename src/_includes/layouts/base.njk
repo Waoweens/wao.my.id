@@ -14,14 +14,17 @@
 	
 	<!-- Open Graph -->
 	<meta property="og:site_name" content="{{ site.name }}"  />
-	<meta property="og:type" content="{{ 'article' if '/post' in page.url else 'website' }}" />
+	<meta property="og:type" content="{{ 'article' if '/blog' in page.url else 'website' }}" />
 	<meta property="og:url" content="{{ site.url }}{{ page.url }}" />
 	<meta property="og:title" content="{{ title if title else site.name }}" />
 	<meta property="og:description" content="{{ description if description else site.description }}" />
 	{# <meta property="og:image" content={$page.data.meta?.ogImage ?? ''} /> #}
+	{%if image %}
+		<meta property="og:image" content="{{ site.url }}{{ image }}" />
+	{% endif %}
 
 	<!-- og:type article -->
-	<meta name="article:author" content="{{ site.author }}" />
+	{# <meta name="article:author" content="{{ site.author }}" /> #}
 	{# <meta name="article:published_time" content={$page.data.meta?.articlePublishedTime ?? ''} /> #}
 
 	<!-- Twitter Card -->
@@ -33,6 +36,8 @@
 		<meta name="twitter:label{i + 1}" content={label} />
 		<meta name="twitter:value{i + 1}" content={value} />
 	{/each#}
+
+	{% block head %}{% endblock %}
 </head>
 <body>
 	<header>
