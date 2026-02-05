@@ -9,13 +9,13 @@ body {
 	@apply w-full min-h-screen flex flex-col items-center bg-[#BDB5E6]
 }
 
-header {
+.site-header {
 	@apply bg-black p-4 w-full;
 }
-main {
+.site-main {
 	@apply bg-gray-800 w-full max-w-4xl p-4 grow;
 }
-footer {
+.site-footer {
 	@apply bg-black w-full max-w-4xl p-4;
 }
 
